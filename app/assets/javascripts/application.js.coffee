@@ -26,6 +26,9 @@
 
 #= require_self
 
+window.settings =
+  mapSize: 9
+
 window.Application = class
   start: ->
     $('#preloader').hide()

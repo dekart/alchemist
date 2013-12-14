@@ -4,7 +4,7 @@
 
 
 @function sprite_position_cursor(){
-  @return -2px -2px;
+  @return -314px -2px;
 }
 @mixin sprite_cursor($width: 20px, $height: 20px) {
   width: $width;
@@ -13,6 +13,84 @@
     repeat: no-repeat;
     image: sprite_image_url();
     position: sprite_position_cursor();
+  }
+}
+
+@function sprite_position_ingredient_blue(){
+  @return -262px -2px;
+}
+@mixin sprite_ingredient_blue($width: 50px, $height: 50px) {
+  width: $width;
+  height: $height;
+  background: {
+    repeat: no-repeat;
+    image: sprite_image_url();
+    position: sprite_position_ingredient_blue();
+  }
+}
+
+@function sprite_position_ingredient_green(){
+  @return -210px -2px;
+}
+@mixin sprite_ingredient_green($width: 50px, $height: 50px) {
+  width: $width;
+  height: $height;
+  background: {
+    repeat: no-repeat;
+    image: sprite_image_url();
+    position: sprite_position_ingredient_green();
+  }
+}
+
+@function sprite_position_ingredient_orange(){
+  @return -158px -2px;
+}
+@mixin sprite_ingredient_orange($width: 50px, $height: 50px) {
+  width: $width;
+  height: $height;
+  background: {
+    repeat: no-repeat;
+    image: sprite_image_url();
+    position: sprite_position_ingredient_orange();
+  }
+}
+
+@function sprite_position_ingredient_purple(){
+  @return -106px -2px;
+}
+@mixin sprite_ingredient_purple($width: 50px, $height: 50px) {
+  width: $width;
+  height: $height;
+  background: {
+    repeat: no-repeat;
+    image: sprite_image_url();
+    position: sprite_position_ingredient_purple();
+  }
+}
+
+@function sprite_position_ingredient_red(){
+  @return -54px -2px;
+}
+@mixin sprite_ingredient_red($width: 50px, $height: 50px) {
+  width: $width;
+  height: $height;
+  background: {
+    repeat: no-repeat;
+    image: sprite_image_url();
+    position: sprite_position_ingredient_red();
+  }
+}
+
+@function sprite_position_ingredient_yellow(){
+  @return -2px -2px;
+}
+@mixin sprite_ingredient_yellow($width: 50px, $height: 50px) {
+  width: $width;
+  height: $height;
+  background: {
+    repeat: no-repeat;
+    image: sprite_image_url();
+    position: sprite_position_ingredient_yellow();
   }
 }
 

@@ -6,6 +6,8 @@ window.LevelController = class extends BaseController
   constructor: ->
     super
 
+    @ingredients = Ingredient.generateMap()
+
     @mouse_position = [0, 0]
 
     @animator = new LevelAnimator(@)

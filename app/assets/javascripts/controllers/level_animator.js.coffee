@@ -8,8 +8,10 @@ window.LevelAnimator = class extends Animator
     super(controller)
 
     @background_layer = new PIXI.DisplayObjectContainer()
+    @ingredient_layer = new PIXI.DisplayObjectContainer()
 
     @stage.addChild(@background_layer)
+    @stage.addChild(@ingredient_layer)
 
 
   prepareTextures: ->
@@ -35,6 +37,10 @@ window.LevelAnimator = class extends Animator
 
     @background_layer.addChild(@background_sprite)
 
+    for column in @controller.ingredients
+      for ingredient in column
+        @ingredient_layer.addChild(@.createIngredientSprite(ingredient))
+
     @sprites_added = true
 
   animate: =>
@@ -48,4 +54,8 @@ window.LevelAnimator = class extends Animator
   updateSpriteStates: ->
     return unless @sprites_added
 
-
+  createIngredientSprite: (ingredient)->
+    sprite = PIXI.Sprite.fromFrame("ingredient_#{ ingredient.type }.png")
+    sprite.position = new PIXI.Point(ingredient.x * 55, ingredient.y * 55)
+    sprite.source = ingredient
+    sprite
