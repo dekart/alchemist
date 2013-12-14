@@ -31,6 +31,9 @@ window.Application = class
     $('#preloader').hide()
     $('#game_screen').css(visibility: 'visible')
 
+    @level = new LevelController()
+    @level.show()
+
 $ =>
   window.preloader = new Preloader(=>
     window.application = new Application()

@@ -1,0 +1,19 @@
+@function sprite_image_url(){
+  @return image-url('art.png');
+}
+
+
+@function sprite_position_cursor(){
+  @return -2px -2px;
+}
+@mixin sprite_cursor($width: 20px, $height: 20px) {
+  width: $width;
+  height: $height;
+  background: {
+    repeat: no-repeat;
+    image: sprite_image_url();
+    position: sprite_position_cursor();
+  }
+}
+
+

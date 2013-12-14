@@ -12,7 +12,7 @@ window.Animator = class
 
     @.prepareTextures()
 
-    @stage = new PIXI.Stage(0x000000, true)
+    @stage = new PIXI.Stage(0x000000, false)
     @renderer = Animator.getRenderer()
 
     @last_tick = Date.now()
@@ -33,10 +33,10 @@ window.Animator = class
 
     return if @paused_at
 
-    if Date.now() - @last_tick >= 15 # 60 frames per second
-      @last_tick = Date.now()
+    #if Date.now() - @last_tick >= 10 # 100 frames per second
+    @last_tick = Date.now()
 
-      @renderer.render(@stage)
+    @renderer.render(@stage)
 
   activate: ->
     return if @active
@@ -98,3 +98,4 @@ window.Animator = class
     @.detachRenderer()
 
     $(selector).get(0).appendChild(@renderer.view)
+    $(@renderer.view).css(cursor: 'none')
