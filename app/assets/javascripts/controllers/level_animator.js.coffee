@@ -3,6 +3,8 @@
 window.LevelAnimator = class extends Animator
   ingredientSize: 55
   swapAnimationSpeed: 500
+  explosionAnimationSpeed: 500
+  affectedAnimationSpeed: 500
 
   loops: # [StartFrame, EndFrame, Speed]
    ingredient_blue:   {frames: [0,  1], speed: 0.3}
@@ -22,6 +24,8 @@ window.LevelAnimator = class extends Animator
     @stage.addChild(@background_layer)
     @stage.addChild(@ingredient_layer)
     @stage.addChild(@interface_layer)
+
+    @ingredients = []
 
 
   prepareTextures: ->
@@ -47,9 +51,14 @@ window.LevelAnimator = class extends Animator
 
     @background_layer.addChild(@background_sprite)
 
-    for column in @controller.ingredients.ingredients
-      for ingredient in column
-        @ingredient_layer.addChild(@.createIngredientSprite(ingredient))
+    for column, x in @controller.ingredients.ingredients
+      for ingredient, y in column
+        sprite = @.createIngredientSprite(ingredient)
+
+        @ingredient_layer.addChild(sprite)
+
+        @ingredients[x] ?= []
+        @ingredients[x][y] = sprite
 
     @highlight = PIXI.Sprite.fromFrame("highlight.png")
 
@@ -59,7 +68,20 @@ window.LevelAnimator = class extends Animator
 
   animate: =>
     unless @paused_at
-      @controller.updateState()
+      if @swap_animation_started and @.isSwapAnimationFinished()
+        @swap_animation_started = null
+
+        @controller.onSwapAnimationFinished()
+
+      if @explosion_animation_started and @.isExplosionAnimationFinished()
+        @explosion_animation_started = null
+
+        @controller.onExplosionAnimationFinished()
+
+      if @affected_animation_started and @.isAffectedAnimationFinished()
+        @affected_animation_started = null
+
+        @controller.onAffectedAnimationFinished()
 
       @.updateSpriteStates()
 
@@ -99,15 +121,15 @@ window.LevelAnimator = class extends Animator
   animateIngredientSwap: (ingredient1, ingredient2)->
     @swap_animation_started = Date.now()
 
-    sprite1 = _.find(@ingredient_layer.children, (child)=> child.source.id == ingredient1.id )
-    sprite2 = _.find(@ingredient_layer.children, (child)=> child.source.id == ingredient2.id )
+    sprite1 = @ingredients[ingredient1.x][ingredient1.y]
+    sprite2 = @ingredients[ingredient2.x][ingredient2.y]
 
     sprite1.swappingWith = ingredient2
     sprite2.swappingWith = ingredient1
 
   updateIngredientSprite: (sprite)->
     if sprite.swappingWith?
-      if Date.now() - @swap_animation_started > @.swapAnimationSpeed
+      if not @swap_animation_started or @.isSwapAnimationFinished()
         sprite.textures = @.loops["ingredient_#{ sprite.source.type }"].textures
 
         sprite.position.x = sprite.source.x * @.ingredientSize
@@ -120,6 +142,56 @@ window.LevelAnimator = class extends Animator
         sprite.position.x = (sprite.swappingWith.x + (1 - progress) * (sprite.source.x - sprite.swappingWith.x)) * @.ingredientSize
         sprite.position.y = (sprite.swappingWith.y + (1 - progress) * (sprite.source.y - sprite.swappingWith.y)) * @.ingredientSize
 
+    if sprite.exploding
+      if not @explosion_animation_started or @.isExplosionAnimationFinished()
+        sprite.scale.x = 1
+        sprite.scale.y = 1
+
+        delete sprite.exploding
+      else
+        progress = (Date.now() - @explosion_animation_started) / @.explosionAnimationSpeed
+
+        sprite.scale.x = 1 - progress
+        sprite.scale.y = 1 - progress
+
+    if sprite.affected_displacement
+      if not @affected_animation_started or @.isAffectedAnimationFinished()
+        sprite.position.y = sprite.source.y * @.ingredientSize
+
+        delete sprite.affected_displacement
+      else
+        progress = (Date.now() - @affected_animation_started) / @.affectedAnimationSpeed
+
+        sprite.position.y = (sprite.source.y - (1 - progress) * sprite.affected_displacement) * @.ingredientSize
+
     sprite.gotoAndStop(
       if sprite.source.selected then 1 else 0
     )
+
+  isSwapAnimationFinished: ->
+    Date.now() - @swap_animation_started > @.swapAnimationSpeed
+
+
+  animateExplosion: (ingredients)->
+    @explosion_animation_started = Date.now()
+
+    for ingredient in ingredients
+      @ingredients[ingredient.x][ingredient.y].exploding = true
+
+  isExplosionAnimationFinished: ->
+    Date.now() - @explosion_animation_started > @.explosionAnimationSpeed
+
+
+  animateAffected: (affected)->
+    @affected_animation_started = Date.now()
+
+    for [ingredient, displacement] in affected
+      sprite = @ingredients[ingredient.x][ingredient.y]
+      sprite.affected_displacement = displacement
+      sprite.textures = @.loops["ingredient_#{ sprite.source.type }"].textures
+
+  isAffectedAnimationFinished: ->
+    Date.now() - @affected_animation_started > @.affectedAnimationSpeed
+
+  isAnimationInProgress: ->
+    @swap_animation_started or @explosion_animation_started or @affected_animation_started

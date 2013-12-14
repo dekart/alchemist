@@ -1,13 +1,13 @@
 window.IngredientMap = class
-  @generate: ->
-    new @(
-      for x in [0 .. settings.mapSize - 1]
-        for y in [0 .. settings.mapSize - 1]
-          new Ingredient(x,y, Ingredient.types[_.random(Ingredient.types.length - 1)])
-    )
+  constructor: ->
+    @ingredients = []
 
-  constructor: (@ingredients)->
-    #ok
+    for x in [0 .. settings.mapSize - 1]
+      @ingredients[x] = []
+
+      for y in [0 .. settings.mapSize - 1]
+        @ingredients[x][y] = new Ingredient(x,y, Ingredient.randomType())
+        @ingredients[x][y].type = Ingredient.randomType() while @.hasMatches(@ingredients[x][y])
 
   get: (x, y)->
     @ingredients[x][y]
@@ -27,17 +27,18 @@ window.IngredientMap = class
   isPurposeMatch: (ingredient1, ingredient2)->
     [ingredient1.type, ingredient2.type] = [ingredient2.type, ingredient1.type] # Temporary change types to emulate position change
 
-    matches1 = @.matchesOf(ingredient1)
-    matches2 = @.matchesOf(ingredient2)
+    matches1 = @.hasMatches(ingredient1)
+    matches2 = @.hasMatches(ingredient2)
 
     [ingredient1.type, ingredient2.type] = [ingredient2.type, ingredient1.type] # Return types back
 
-    for match in matches1
-      return true if match
-    for match in matches2
+    matches1 or matches2
+
+  hasMatches: (ingredient)->
+    for match in @.matchesOf(ingredient)
       return true if match
 
-    return false
+    false
 
   matchesOf: (ingredient)->
     [
@@ -49,3 +50,50 @@ window.IngredientMap = class
       @ingredients[ingredient.x]?[ingredient.y - 1]?.type == @ingredients[ingredient.x]?[ingredient.y + 1]?.type == ingredient.type
       @ingredients[ingredient.x]?[ingredient.y + 1]?.type == @ingredients[ingredient.x]?[ingredient.y + 2]?.type == ingredient.type
     ]
+
+  getExplodingIngredients: ->
+    result = []
+
+    for column in @ingredients
+      for ingredient in column
+        result.push(ingredient) if @.hasMatches(ingredient)
+
+    result
+
+  checkAffectedIngredients: (exploded)->
+    displacements = []
+
+    groups = _.groupBy(exploded, (e)-> e.x )
+
+    for column, x in @ingredients
+      continue unless groups[x]?
+
+      displace = 0
+      displace_cells = []
+
+      for y in [column.length - 1 .. 0]
+        ingredient = column[y]
+
+        if exploded.indexOf(ingredient) != -1 # Exploded cell
+          displace_cells.push(ingredient)
+
+        if exploded.indexOf(ingredient) == -1 or y == 0
+          if displace_cells.length > 0 # There are some cells in stack
+            for c in displace_cells
+              c.type = @.displacedType(c, displace + displace_cells.length)
+
+              displacements.push([c, displace + displace_cells.length])
+
+            displace += displace_cells.length
+            displace_cells = []
+
+          if displace > 0
+            ingredient.type = @.displacedType(ingredient, displace)
+
+            displacements.push([ingredient, displace])
+
+    displacements
+
+
+  displacedType: (ingredient, displace)->
+    @ingredients[ingredient.x][ingredient.y - displace]?.type || Ingredient.randomType()
