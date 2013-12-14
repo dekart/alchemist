@@ -4,7 +4,7 @@
 
 
 @function sprite_position_cursor(){
-  @return -314px -2px;
+  @return -366px -2px;
 }
 @mixin sprite_cursor($width: 20px, $height: 20px) {
   width: $width;
@@ -13,6 +13,19 @@
     repeat: no-repeat;
     image: sprite_image_url();
     position: sprite_position_cursor();
+  }
+}
+
+@function sprite_position_highlight(){
+  @return -314px -2px;
+}
+@mixin sprite_highlight($width: 50px, $height: 50px) {
+  width: $width;
+  height: $height;
+  background: {
+    repeat: no-repeat;
+    image: sprite_image_url();
+    position: sprite_position_highlight();
   }
 }
 

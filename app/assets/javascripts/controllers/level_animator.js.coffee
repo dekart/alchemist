@@ -9,9 +9,11 @@ window.LevelAnimator = class extends Animator
 
     @background_layer = new PIXI.DisplayObjectContainer()
     @ingredient_layer = new PIXI.DisplayObjectContainer()
+    @interface_layer  = new PIXI.DisplayObjectContainer()
 
     @stage.addChild(@background_layer)
     @stage.addChild(@ingredient_layer)
+    @stage.addChild(@interface_layer)
 
 
   prepareTextures: ->
@@ -41,6 +43,10 @@ window.LevelAnimator = class extends Animator
       for ingredient in column
         @ingredient_layer.addChild(@.createIngredientSprite(ingredient))
 
+    @highlight = PIXI.Sprite.fromFrame("highlight.png")
+
+    @interface_layer.addChild(@highlight)
+
     @sprites_added = true
 
   animate: =>
@@ -54,8 +60,22 @@ window.LevelAnimator = class extends Animator
   updateSpriteStates: ->
     return unless @sprites_added
 
+    if @.isMouseWithinIngredients()
+      @highlight.position = @.mousePositionToHighlightPosition()
+
+
   createIngredientSprite: (ingredient)->
     sprite = PIXI.Sprite.fromFrame("ingredient_#{ ingredient.type }.png")
     sprite.position = new PIXI.Point(ingredient.x * 55, ingredient.y * 55)
     sprite.source = ingredient
     sprite
+
+  isMouseWithinIngredients: ->
+    0 <= @controller.mouse_position.x < settings.mapSize * 55 and
+    0 <= @controller.mouse_position.y < settings.mapSize * 55
+
+  mousePositionToHighlightPosition: ->
+    new PIXI.Point(
+      Math.floor(@controller.mouse_position.x / 55) * 55,
+      Math.floor(@controller.mouse_position.y / 55) * 55
+    )

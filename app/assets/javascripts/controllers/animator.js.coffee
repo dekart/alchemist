@@ -12,7 +12,7 @@ window.Animator = class
 
     @.prepareTextures()
 
-    @stage = new PIXI.Stage(0x000000, false)
+    @stage = new PIXI.Stage(0x000000, true)
     @renderer = Animator.getRenderer()
 
     @last_tick = Date.now()
@@ -98,4 +98,3 @@ window.Animator = class
     @.detachRenderer()
 
     $(selector).get(0).appendChild(@renderer.view)
-    $(@renderer.view).css(cursor: 'none')
