@@ -19,7 +19,7 @@ window.Preloader = class
     loader.loadManifest(@.manifest)
 
   onComplete: (args...)=>
-    @.fillTextureCache(preloader.paths.art, artSprite)
+    @.fillTextureCache(@.paths.art, artSprite)
 
     @callback.call()
 
