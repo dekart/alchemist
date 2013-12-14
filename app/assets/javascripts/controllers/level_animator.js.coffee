@@ -1,8 +1,15 @@
 #= require ./animator
 
 window.LevelAnimator = class extends Animator
-  #loops: # [StartFrame, EndFrame, Speed]
-  #  some: {frames: [0,  3], speed: 0.3}
+  ingredientSize: 55
+
+  loops: # [StartFrame, EndFrame, Speed]
+   ingredient_blue:   {frames: [0,  1], speed: 0.3}
+   ingredient_green:  {frames: [0,  1], speed: 0.3}
+   ingredient_purple: {frames: [0,  1], speed: 0.3}
+   ingredient_orange: {frames: [0,  1], speed: 0.3}
+   ingredient_red:    {frames: [0,  1], speed: 0.3}
+   ingredient_yellow: {frames: [0,  1], speed: 0.3}
 
   constructor: (controller)->
     super(controller)
@@ -60,22 +67,32 @@ window.LevelAnimator = class extends Animator
   updateSpriteStates: ->
     return unless @sprites_added
 
+    for sprite in @ingredient_layer.children
+      sprite.gotoAndStop(
+        if sprite.source.selected then 1 else 0
+      )
+
     if @.isMouseWithinIngredients()
-      @highlight.position = @.mousePositionToHighlightPosition()
+      position = @.mousePositionToIngredientPosition(@controller.mouse_position)
+
+      @highlight.position = new PIXI.Point(position.x * @.ingredientSize, position.y * @.ingredientSize)
 
 
   createIngredientSprite: (ingredient)->
-    sprite = PIXI.Sprite.fromFrame("ingredient_#{ ingredient.type }.png")
-    sprite.position = new PIXI.Point(ingredient.x * 55, ingredient.y * 55)
+    sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient.type }"].textures)
+    sprite.position = new PIXI.Point(ingredient.x * @.ingredientSize, ingredient.y * @.ingredientSize)
     sprite.source = ingredient
     sprite
 
   isMouseWithinIngredients: ->
-    0 <= @controller.mouse_position.x < settings.mapSize * 55 and
-    0 <= @controller.mouse_position.y < settings.mapSize * 55
+    0 <= @controller.mouse_position.x < settings.mapSize * @.ingredientSize and
+    0 <= @controller.mouse_position.y < settings.mapSize * @.ingredientSize
 
-  mousePositionToHighlightPosition: ->
-    new PIXI.Point(
-      Math.floor(@controller.mouse_position.x / 55) * 55,
-      Math.floor(@controller.mouse_position.y / 55) * 55
-    )
+  mousePositionToIngredientPosition: (position)->
+    x = Math.floor(position.x / @.ingredientSize)
+    y = Math.floor(position.y / @.ingredientSize)
+
+    {
+      x: if 0 <= x < settings.mapSize then x else if x < 0 then 0 else settings.mapSize - 1
+      y: if 0 <= y < settings.mapSize then y else if y < 0 then 0 else settings.mapSize - 1
+    }

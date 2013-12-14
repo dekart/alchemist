@@ -32,7 +32,9 @@ window.LevelController = class extends BaseController
     @animator.activate()
 
   onClick: (e)=>
-    console.log('click', e)
+    position = @animator.mousePositionToIngredientPosition(@mouse_position)
+
+    @ingredients[position.x][position.y].toggleSelection()
 
     e.preventDefault()
 
