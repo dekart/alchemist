@@ -2,6 +2,8 @@
 
 window.LevelAnimator = class extends Animator
   ingredientSize: 55
+  ingredientGridOffset: 50
+
   swapAnimationSpeed: 500
   explosionAnimationSpeed: 500
   affectedAnimationSpeed: 500
@@ -61,6 +63,8 @@ window.LevelAnimator = class extends Animator
         @ingredients[x][y] = sprite
 
     @highlight = PIXI.Sprite.fromFrame("highlight.png")
+    @highlight.anchor.x = 0.5
+    @highlight.anchor.y = 0.5
 
     @interface_layer.addChild(@highlight)
 
@@ -96,22 +100,25 @@ window.LevelAnimator = class extends Animator
     if @.isMouseWithinIngredients(@controller.mouse_position)
       position = @.mousePositionToIngredientPosition(@controller.mouse_position)
 
-      @highlight.position = new PIXI.Point(position.x * @.ingredientSize, position.y * @.ingredientSize)
-
+      @highlight.position.x = @.gridToScene(position.x)
+      @highlight.position.y = @.gridToScene(position.y)
 
   createIngredientSprite: (ingredient)->
     sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient.type }"].textures)
-    sprite.position = new PIXI.Point(ingredient.x * @.ingredientSize, ingredient.y * @.ingredientSize)
+    sprite.position.x = @.gridToScene(ingredient.x)
+    sprite.position.y = @.gridToScene(ingredient.y)
+    sprite.anchor.x = 0.5
+    sprite.anchor.y = 0.5
     sprite.source = ingredient
     sprite
 
   isMouseWithinIngredients: (position)->
-    0 <= position.x < settings.mapSize * @.ingredientSize and
-    0 <= position.y < settings.mapSize * @.ingredientSize
+    @.gridToScene(-1) < position.x < @.gridToScene(settings.mapSize) and
+    @.gridToScene(-1) < position.y < @.gridToScene(settings.mapSize)
 
   mousePositionToIngredientPosition: (position)->
-    x = Math.floor(position.x / @.ingredientSize)
-    y = Math.floor(position.y / @.ingredientSize)
+    x = Math.floor((position.x - @.ingredientGridOffset) / @.ingredientSize + 0.5)
+    y = Math.floor((position.y - @.ingredientGridOffset) / @.ingredientSize + 0.5)
 
     {
       x: if 0 <= x < settings.mapSize then x else if x < 0 then 0 else settings.mapSize - 1
@@ -132,15 +139,15 @@ window.LevelAnimator = class extends Animator
       if not @swap_animation_started or @.isSwapAnimationFinished()
         sprite.textures = @.loops["ingredient_#{ sprite.source.type }"].textures
 
-        sprite.position.x = sprite.source.x * @.ingredientSize
-        sprite.position.y = sprite.source.y * @.ingredientSize
+        sprite.position.x = @.gridToScene(sprite.source.x)
+        sprite.position.y = @.gridToScene(sprite.source.y)
 
         delete sprite.swappingWith
       else
         progress = (Date.now() - @swap_animation_started) / @.swapAnimationSpeed
 
-        sprite.position.x = (sprite.swappingWith.x + (1 - progress) * (sprite.source.x - sprite.swappingWith.x)) * @.ingredientSize
-        sprite.position.y = (sprite.swappingWith.y + (1 - progress) * (sprite.source.y - sprite.swappingWith.y)) * @.ingredientSize
+        sprite.position.x = @.gridToScene(sprite.swappingWith.x + (1 - progress) * (sprite.source.x - sprite.swappingWith.x))
+        sprite.position.y = @.gridToScene(sprite.swappingWith.y + (1 - progress) * (sprite.source.y - sprite.swappingWith.y))
 
     if sprite.exploding
       if not @explosion_animation_started or @.isExplosionAnimationFinished()
@@ -156,17 +163,20 @@ window.LevelAnimator = class extends Animator
 
     if sprite.affected_displacement
       if not @affected_animation_started or @.isAffectedAnimationFinished()
-        sprite.position.y = sprite.source.y * @.ingredientSize
+        sprite.position.y = @.gridToScene(sprite.source.y)
 
         delete sprite.affected_displacement
       else
         progress = (Date.now() - @affected_animation_started) / @.affectedAnimationSpeed
 
-        sprite.position.y = (sprite.source.y - (1 - progress) * sprite.affected_displacement) * @.ingredientSize
+        sprite.position.y = @.gridToScene(sprite.source.y - (1 - progress) * sprite.affected_displacement)
 
     sprite.gotoAndStop(
       if sprite.source.selected then 1 else 0
     )
+
+  gridToScene: (coordinate)->
+    @.ingredientGridOffset + coordinate * @.ingredientSize
 
   isSwapAnimationFinished: ->
     Date.now() - @swap_animation_started > @.swapAnimationSpeed
