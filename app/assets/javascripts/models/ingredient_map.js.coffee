@@ -80,7 +80,7 @@ window.IngredientMap = class
         if exploded.indexOf(ingredient) == -1 or y == 0
           if displace_cells.length > 0 # There are some cells in stack
             for c in displace_cells
-              c.type = @.displacedType(c, displace + displace_cells.length)
+              @.updateWithDisplacedType(c, displace + displace_cells.length)
 
               displacements.push([c, displace + displace_cells.length])
 
@@ -88,12 +88,18 @@ window.IngredientMap = class
             displace_cells = []
 
           if displace > 0
-            ingredient.type = @.displacedType(ingredient, displace)
+            @.updateWithDisplacedType(ingredient, displace)
 
             displacements.push([ingredient, displace])
 
     displacements
 
 
-  displacedType: (ingredient, displace)->
-    @ingredients[ingredient.x][ingredient.y - displace]?.type || Ingredient.randomType()
+  updateWithDisplacedType: (ingredient, displace)->
+    ingredient_above = @ingredients[ingredient.x][ingredient.y - displace]
+
+    if ingredient_above
+      ingredient.type = ingredient_above.type
+    else
+      ingredient.type = Ingredient.randomType()
+      ingredient.type = Ingredient.randomType() while @.hasMatches(ingredient)
