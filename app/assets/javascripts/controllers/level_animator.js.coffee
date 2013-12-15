@@ -2,11 +2,22 @@
 
 window.LevelAnimator = class extends Animator
   ingredientSize: 55
-  ingredientGridOffset: 50
+  ingredientGridOffset: 52
 
   swapAnimationSpeed: 250
   explosionAnimationSpeed: 200
   affectedAnimationSpeed: 300
+
+  timerStyle:
+    normal:
+      font: 'normal 35px Tahoma',
+      align: 'right',
+      fill: '#fff8f3'
+    expiring:
+      font: 'normal 35px Tahoma',
+      align: 'right',
+      fill: '#ff7988'
+
 
   loops: # [StartFrame, EndFrame, Speed]
    ingredient_blue:   {frames: [0,  1], speed: 0.3}
@@ -28,7 +39,7 @@ window.LevelAnimator = class extends Animator
     @stage.addChild(@interface_layer)
 
     @ingredients = []
-
+    @potion_components = []
 
   prepareTextures: ->
     return unless @.loops?
@@ -68,12 +79,26 @@ window.LevelAnimator = class extends Animator
     @highlight.anchor.x = 0.5
     @highlight.anchor.y = 0.5
 
-    @timer = new PIXI.Text(@controller.timer.currentValue(), font: 'normal 20px Tahoma', align: 'center')
-    @timer.position.x = 700
-    @timer.position.y = 50
-
     @interface_layer.addChild(@highlight)
+
+    @timer = new PIXI.Text(@controller.timer.currentValue(), @.timerStyle.normal)
+    @timer.position.x = 750
+    @timer.position.y = 20
+    @timer.anchor.x = 1
+
     @interface_layer.addChild(@timer)
+
+    for [ingredient, found], index in @controller.potion.ingredients
+      sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient }"].textures)
+      sprite.anchor.x = 1
+      sprite.position.x = 608 + index * @.ingredientSize
+      sprite.position.y = 140
+      sprite.alpha = 0.6
+
+      @potion_components.push(sprite)
+
+      @interface_layer.addChild(sprite)
+
 
     @sprites_added = true
 
@@ -113,6 +138,9 @@ window.LevelAnimator = class extends Animator
       @highlight.position.y = @.gridToScene(position.y)
 
     @timer.setText(@controller.timer.currentValue())
+
+    if @controller.timer.currentValue() <= 50
+      @timer.setStyle(@.timerStyle.expiring)
 
   createIngredientSprite: (ingredient)->
     sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient.type }"].textures)

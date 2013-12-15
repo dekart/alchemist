@@ -1,6 +1,6 @@
 window.canvasSize = {
-  width: 760
-  height: 550
+  width: 800
+  height: 600
 }
 
 window.Animator = class

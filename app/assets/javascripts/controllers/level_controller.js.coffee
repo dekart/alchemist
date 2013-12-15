@@ -15,6 +15,8 @@ window.LevelController = class extends BaseController
 
     @timer = new Timer(settings.timeLimit)
 
+    @potion = new Potion(4)
+
   show: ->
     @.setupEventListeners()
 
