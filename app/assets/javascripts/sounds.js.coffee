@@ -18,19 +18,17 @@ class SoundManager
 
     @manager.onready ()=>
       @sounds = {
-        music: @manager.createSound(
-          id: 'music',
-          url: '$assetPath(music.mp3)'
-          volume: 1,
-          onload: @.fadeInMusic
-        )
-
-        mysound: @manager.createSound(
-          id: 'mysound',
-          url: '$assetPath(mysound.mp3)'
+        swap: @manager.createSound(
+          id: 'swap',
+          url: '$assetPath(swap.mp3)'
           volume: 50
         )
 
+        explode: @manager.createSound(
+          id: 'explode',
+          url: '$assetPath(explode.mp3)'
+          volume: 50
+        )
       }
 
       @ready = true

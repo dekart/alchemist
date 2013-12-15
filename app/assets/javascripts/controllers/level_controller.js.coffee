@@ -83,10 +83,14 @@ window.LevelController = class extends BaseController
 
     @animator.animateIngredientSwap(ingredient1, ingredient2)
 
+    sounds.playSound('swap')
+
   checkMatches: ->
     @exploding = @ingredients.getExplodingIngredients()
 
     return if @exploding.length == 0
+
+    sounds.playSound('explode')
 
     for ingredient in @exploding
       ingredient.exploding = true

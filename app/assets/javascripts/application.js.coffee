@@ -28,7 +28,7 @@
 
 window.settings =
   mapSize: 9
-  timeLimit: 6 # You have only one minute!
+  timeLimit: 60 # You have only one minute!
   timeBonus: 15
   scores:
     3: 2
