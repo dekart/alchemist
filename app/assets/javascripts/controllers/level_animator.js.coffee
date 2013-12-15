@@ -11,13 +11,18 @@ window.LevelAnimator = class extends Animator
 
   timerStyle:
     normal:
-      font: 'normal 35px Tahoma',
-      align: 'right',
+      font: 'normal 35px Tahoma'
+      align: 'right'
       fill: '#fff8f3'
     expiring:
-      font: 'normal 35px Tahoma',
-      align: 'right',
+      font: 'normal 35px Tahoma'
+      align: 'right'
       fill: '#ff7988'
+
+  scoreStyle:
+    font: 'normal 35px Tahoma'
+    align: 'right'
+    fill: '#fff8f3'
 
 
   loops: # [StartFrame, EndFrame, Speed]
@@ -90,6 +95,13 @@ window.LevelAnimator = class extends Animator
 
     @interface_layer.addChild(@timer)
 
+    @score = new PIXI.Text(@controller.score, @.scoreStyle)
+    @score.position.x = 750
+    @score.position.y = 90
+    @score.anchor.x = 1
+
+    @interface_layer.addChild(@score)
+
     @.createPotionSprites()
 
     @sprites_added = true
@@ -138,8 +150,10 @@ window.LevelAnimator = class extends Animator
 
     @timer.setText(@controller.timer.currentValue())
 
-    if @controller.timer.currentValue() <= 50
+    if @controller.timer.currentValue() <= 10
       @timer.setStyle(@.timerStyle.expiring)
+
+    @score.setText(@controller.score)
 
   createIngredientSprite: (ingredient)->
     sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient.type }"].textures)
@@ -155,7 +169,7 @@ window.LevelAnimator = class extends Animator
       sprite = new PIXI.MovieClip(@.loops["ingredient_#{ type }"].textures)
       sprite.anchor.x = 1
       sprite.position.x = 608 + index * @.ingredientSize
-      sprite.position.y = 140
+      sprite.position.y = 215
 
       if found
         sprite.gotoAndStop(1)
@@ -245,7 +259,7 @@ window.LevelAnimator = class extends Animator
 
       for sprite in @collecting
         sprite.position.x = 700 - (700 - @.gridToScene(sprite.source.x)) * (1 - progress)
-        sprite.position.y = 160 - (160 - @.gridToScene(sprite.source.y)) * (1 - progress)
+        sprite.position.y = 230 - (160 - @.gridToScene(sprite.source.y)) * (1 - progress)
 
 
   gridToScene: (coordinate)->

@@ -103,3 +103,37 @@ window.IngredientMap = class
     else
       ingredient.type = Ingredient.randomType()
       ingredient.type = Ingredient.randomType() while @.hasMatches(ingredient)
+
+  calculateExplodingScore: ->
+    result = []
+
+    for x in [0 .. settings.mapSize - 1]
+      horizontal = 0
+
+      for y in [0 .. settings.mapSize - 1]
+        if @ingredients[x][y].exploding
+          horizontal += 1
+        else if horizontal >= 3
+          result.push(horizontal)
+          horizontal = 0
+
+      result.push(horizontal) if horizontal >= 3
+
+    for y in [0 .. settings.mapSize - 1]
+      vertical = 0
+
+      for x in [0 .. settings.mapSize - 1]
+        if @ingredients[x][y].exploding
+          vertical += 1
+        else if vertical >= 3
+          result.push(vertical)
+          vertical = 0
+
+      result.push(vertical) if vertical >= 3
+
+    sum = 0
+
+    for count in result
+      sum += settings.scores[count]
+
+    sum

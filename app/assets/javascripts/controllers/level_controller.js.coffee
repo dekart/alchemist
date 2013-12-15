@@ -13,9 +13,11 @@ window.LevelController = class extends BaseController
 
     @animator = new LevelAnimator(@)
 
+    @potion = new Potion(4)
+
     @timer = new Timer(settings.timeLimit)
 
-    @potion = new Potion(4)
+    @score = 0
 
   show: ->
     @.setupEventListeners()
@@ -88,6 +90,8 @@ window.LevelController = class extends BaseController
       ingredient.exploding = true
 
     @animator.animateExplosion(@exploding)
+
+    @score += @ingredients.calculateExplodingScore()
 
   checkAffected: ->
     for ingredient in @exploding
