@@ -32,7 +32,7 @@ window.LevelController = class extends BaseController
 
     @el.on('mousedown touchstart', 'canvas', @.onMouseDown)
     @el.on('mousemove touchmove', 'canvas', @.onMouseMove)
-    @el.on('mouseup touchend', 'canvas', @.onMouseUp)
+    @el.on('mouseup touchend mouseleave', 'canvas', @.onMouseUp)
 
   updateEventOffsets: (e)->
     return if e.offsetX and e.offsetY
