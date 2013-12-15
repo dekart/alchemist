@@ -82,12 +82,6 @@ window.LevelAnimator = class extends Animator
 
     # Interface
 
-    # @highlight = PIXI.Sprite.fromFrame("highlight.png")
-    # @highlight.anchor.x = 0.5
-    # @highlight.anchor.y = 0.5
-
-    # @interface_layer.addChild(@highlight)
-
     @timer = new PIXI.Text(@controller.timer.currentValue(), @.timerStyle.normal)
     @timer.position.x = 760
     @timer.position.y = 20
@@ -141,12 +135,6 @@ window.LevelAnimator = class extends Animator
 
     @.updateCollectedAnimationSprites()
 
-    # if @.isMouseWithinIngredients(@controller.mouse_position)
-    #   position = @.mousePositionToIngredientPosition(@controller.mouse_position)
-
-    #   @highlight.position.x = @.gridToScene(position.x)
-    #   @highlight.position.y = @.gridToScene(position.y)
-
     @timer.setText(@controller.timer.currentValue())
 
     if @controller.timer.currentValue() <= 10
@@ -173,7 +161,7 @@ window.LevelAnimator = class extends Animator
       if found
         sprite.gotoAndStop(1)
       else
-        sprite.alpha = 0.6
+        sprite.alpha = 0.3
 
       sprite.source_type = type
 
