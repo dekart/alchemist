@@ -34,6 +34,8 @@ window.LevelController = class extends BaseController
     @el.on('mousemove touchmove', 'canvas', @.onMouseMove)
     @el.on('mouseup touchend mouseleave', 'canvas', @.onMouseUp)
 
+    @el.on('click', '.tutorial', @.onTutorialClick)
+
   updateEventOffsets: (e)->
     return if e.offsetX and e.offsetY
 
@@ -46,6 +48,8 @@ window.LevelController = class extends BaseController
     @animator.deactivate()
 
     @el.appendTo('#game')
+
+    @el.append('<button class="tutorial">How To Play</button>')
 
     @animator.activate()
 
@@ -63,10 +67,13 @@ window.LevelController = class extends BaseController
     else
       @.onMouseMove(e)
 
-    position = @animator.mousePositionToIngredientPosition(@mouse_position)
+    if @selected_ingredient
+      @.onMouseUp(e)
+    else
+      position = @animator.mousePositionToIngredientPosition(@mouse_position)
 
-    @selected_ingredient = @ingredients.get(position.x, position.y)
-    @selected_ingredient.toggleSelection()
+      @selected_ingredient = @ingredients.get(position.x, position.y)
+      @selected_ingredient.toggleSelection()
 
   onMouseMove: (e)=>
     e.preventDefault()
@@ -107,6 +114,10 @@ window.LevelController = class extends BaseController
 
     @selected_ingredient = null
 
+  onTutorialClick: (e)=>
+    e.preventDefault()
+
+    TutorialDialogController.show(@)
 
   finish: ->
     @animator.deactivate()

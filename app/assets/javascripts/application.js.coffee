@@ -44,6 +44,8 @@ window.Application = class
     @level = new LevelController()
     @level.show()
 
+    TutorialDialogController.show(@level)
+
 $ =>
   window.preloader = new Preloader(=>
     window.application = new Application()

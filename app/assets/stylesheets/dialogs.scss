@@ -12,7 +12,7 @@
     position: absolute;
     top: 15px;
     left: 15px;
-    width: 480px;
+    width: 470px;
 
     color: #ffefe6;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
@@ -20,6 +20,13 @@
 
     h1 {
       margin-top: 0;
+    }
+
+    .text {
+      strong{
+        color: #ff914d;
+        white-space: nowrap;
+      }
     }
   }
 }
@@ -35,12 +42,6 @@
 }
 
 .finish.dialog {
-  .text {
-    strong{
-      color: #ff914d;
-    }
-  }
-
   .scores {
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 20px;
@@ -67,16 +68,6 @@
     }
   }
 
-  button {
-    width: 150px;
-    height: 60px;
-    line-height: 55px;
-    color: white;
-    border: none;
-    background: image-url("button.png") transparent no-repeat;
-    text-shadow: 1px 1px 2px black;
-    cursor: pointer;
-  }
 
   .replay {
     font-size: 30px;
@@ -92,5 +83,23 @@
 
   .save {
     font-size: 22px;
+  }
+}
+
+.tutorial.dialog {
+  .start, .close {
+    font-size: 22px;
+  }
+
+  ol {
+    margin: 20px 0;
+    padding-right: 170px;
+    height: 230px;
+    text-align: left;
+    background: image-url('tutorial.png') top right no-repeat;
+
+    li {
+      margin-bottom: 5px;
+    }
   }
 }
