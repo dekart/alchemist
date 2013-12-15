@@ -36,15 +36,6 @@
       color: #ff914d;
     }
   }
-  .score {
-    color: #ff914d;
-    font-size: 40px;
-    padding: 10px 20px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 20px;
-    width: 150px;
-    margin: 20px auto;
-  }
 
   .scores {
     background-color: rgba(0, 0, 0, 0.3);
@@ -54,8 +45,21 @@
     margin: 20px auto;
 
     .current {
+      font-size: 22px;
       color: #ff914d;
       font-weight: bold;
+    }
+
+    h2 {
+      margin: 0;
+    }
+
+    table {
+      margin: auto;
+
+      td {
+        padding: 3px 5px;
+      }
     }
   }
 
@@ -67,6 +71,7 @@
     border: none;
     background: image-url("button.png") transparent no-repeat;
     text-shadow: 1px 1px 2px black;
+    cursor: pointer;
   }
 
   .replay {
