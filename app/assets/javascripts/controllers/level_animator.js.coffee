@@ -62,16 +62,25 @@ window.LevelAnimator = class extends Animator
         @ingredients[x] ?= []
         @ingredients[x][y] = sprite
 
+    # Interface
+
     @highlight = PIXI.Sprite.fromFrame("highlight.png")
     @highlight.anchor.x = 0.5
     @highlight.anchor.y = 0.5
 
+    @timer = new PIXI.Text(@controller.timer.currentValue(), font: 'normal 20px Tahoma', align: 'center')
+    @timer.position.x = 700
+    @timer.position.y = 50
+
     @interface_layer.addChild(@highlight)
+    @interface_layer.addChild(@timer)
 
     @sprites_added = true
 
   animate: =>
     unless @paused_at
+      @controller.updateState()
+
       if @swap_animation_started and @.isSwapAnimationFinished()
         @swap_animation_started = null
 
@@ -102,6 +111,8 @@ window.LevelAnimator = class extends Animator
 
       @highlight.position.x = @.gridToScene(position.x)
       @highlight.position.y = @.gridToScene(position.y)
+
+    @timer.setText(@controller.timer.currentValue())
 
   createIngredientSprite: (ingredient)->
     sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient.type }"].textures)

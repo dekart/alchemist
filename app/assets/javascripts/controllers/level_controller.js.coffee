@@ -13,6 +13,8 @@ window.LevelController = class extends BaseController
 
     @animator = new LevelAnimator(@)
 
+    @timer = new Timer(settings.timeLimit)
+
   show: ->
     @.setupEventListeners()
 
@@ -31,6 +33,10 @@ window.LevelController = class extends BaseController
     @el.appendTo('#game')
 
     @animator.activate()
+
+  updateState: ->
+    if @timer.currentValue() == 0
+      @.finish()
 
   onClick: (e)=>
     e.preventDefault()
@@ -64,7 +70,7 @@ window.LevelController = class extends BaseController
   finish: ->
     @animator.deactivate()
 
-    # Level finished
+    FinishDialogController.show()
 
   swapIngredients: (ingredient1, ingredient2)->
     [ingredient1.type, ingredient2.type] = [ingredient2.type, ingredient1.type]

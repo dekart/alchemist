@@ -28,6 +28,7 @@
 
 window.settings =
   mapSize: 9
+  timeLimit: 60 # You have only one minute!
 
 window.Application = class
   start: ->
