@@ -1,5 +1,14 @@
 <div class="content">
-  Finish!
-</div>
+  <h1>Time is Up!</h1>
 
-<button class="close"></button>
+  <div class="text">
+    You've successfully mixed <strong><%= @level.potions_mixed %></strong> potions
+    using <strong><%= @level.ingredients_used %></strong> ingredients.
+  </div>
+
+  <h2>Your Score:</h2>
+
+  <div class="score"><%= @level.score %></div>
+
+  <button class="replay">Replay</button>
+</div>

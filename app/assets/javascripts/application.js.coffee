@@ -28,12 +28,13 @@
 
 window.settings =
   mapSize: 9
-  timeLimit: 60 # You have only one minute!
+  timeLimit: 1 # You have only one minute!
   timeBonus: 20
   scores:
     3: 2
     4: 5
     5: 10
+    potion: 15
 
 window.Application = class
   start: ->

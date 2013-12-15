@@ -18,6 +18,8 @@ window.LevelController = class extends BaseController
     @timer = new Timer(settings.timeLimit)
 
     @score = 0
+    @potions_mixed = 0
+    @ingredients_used = 0
 
   show: ->
     @.setupEventListeners()
@@ -74,7 +76,7 @@ window.LevelController = class extends BaseController
   finish: ->
     @animator.deactivate()
 
-    FinishDialogController.show()
+    FinishDialogController.show(@)
 
   swapIngredients: (ingredient1, ingredient2)->
     [ingredient1.type, ingredient2.type] = [ingredient2.type, ingredient1.type]
@@ -92,6 +94,8 @@ window.LevelController = class extends BaseController
     @animator.animateExplosion(@exploding)
 
     @score += @ingredients.calculateExplodingScore()
+
+    @ingredients_used += @exploding.length
 
   checkAffected: ->
     for ingredient in @exploding
@@ -113,6 +117,9 @@ window.LevelController = class extends BaseController
     @potion = new Potion(4)
 
     @timer.increment(settings.timeBonus)
+
+    @score += settings.scores.potion
+    @potions_mixed += 1
 
   onSwapAnimationFinished: ->
     @.checkMatches()

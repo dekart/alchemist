@@ -10,14 +10,14 @@ window.FinishDialogController = class extends BaseController
 
     @overlay = $("<div class='dialog_overlay'></div>")
 
-  show: (@map, @station)->
+  show: (@level)->
     @.setupEventListeners()
 
     @el.css(opacity: 0).appendTo('#game_screen')
 
     @.render()
 
-    @overlay.css(opacity: 0).appendTo('#game').fadeTo(400, 0.7)
+    @overlay.appendTo('#game')
 
     @el.fadeTo(400, 1)
 
@@ -31,13 +31,15 @@ window.FinishDialogController = class extends BaseController
 
     @visible = false
 
+    document.location = document.location
+
   render: ->
     @html(
       @.renderTemplate('finish_dialog')
     )
 
   setupEventListeners: ->
-    @el.on('click', '.close', @.onCloseClick)
+    @el.on('click', '.replay', @.onCloseClick)
 
     $(document).on('keydown', @.onKeyDown)
 

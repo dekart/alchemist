@@ -13,19 +13,10 @@
     top: 15px;
     left: 15px;
     width: 480px;
-  }
 
-  .close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    border: none;
-    margin: 0;
-    padding: 0;
-    background: none;
+    color: #ffefe6;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
+    text-align: center;
   }
 }
 
@@ -35,6 +26,34 @@
   left: 0px;
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
   z-index: 999;
+}
+
+.finish.dialog {
+  .text {
+    strong{
+      color: #ff914d;
+    }
+  }
+  .score {
+    color: #ff914d;
+    font-size: 40px;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    width: 150px;
+    margin: 20px auto;
+  }
+
+  .replay {
+    font-size: 30px;
+    width: 150px;
+    height: 60px;
+    line-height: 55px;
+    color: white;
+    border: none;
+    background: image-url("button.png") transparent no-repeat;
+    text-shadow: 1px 1px 2px black;
+  }
 }
