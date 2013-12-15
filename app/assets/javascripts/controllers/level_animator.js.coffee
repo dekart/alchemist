@@ -239,13 +239,7 @@ window.LevelAnimator = class extends Animator
 
   updateCollectedAnimationSprites: ->
     if not @collected_animation_started or @.isCollectedAnimationFinished()
-      for sprite in @collecting
-        @interface_layer.removeChild(sprite)
-
-      @collecting = []
-
-      @.destroyPotionSprites()
-      @.createPotionSprites()
+      @.stopCollectingAnimation()
     else
       progress = (Date.now() - @collected_animation_started) / @.collectedAnimationSpeed
 
@@ -284,6 +278,8 @@ window.LevelAnimator = class extends Animator
 
 
   animateCollected: (collected)->
+    @.stopCollectingAnimation() if @collected_animation_started
+
     @collected_animation_started = Date.now()
 
     for ingredient in collected
@@ -299,6 +295,15 @@ window.LevelAnimator = class extends Animator
 
   isCollectedAnimationFinished: ->
     Date.now() - @collected_animation_started > @.collectedAnimationSpeed
+
+  stopCollectingAnimation: ->
+    for sprite in @collecting
+      @interface_layer.removeChild(sprite)
+
+    @collecting = []
+
+    @.destroyPotionSprites()
+    @.createPotionSprites()
 
 
   isBlockingAnimationInProgress: ->

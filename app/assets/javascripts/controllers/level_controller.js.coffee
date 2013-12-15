@@ -108,6 +108,8 @@ window.LevelController = class extends BaseController
 
     @potion = new Potion(4)
 
+    @timer.increment(settings.timeBonus)
+
   onSwapAnimationFinished: ->
     @.checkMatches()
 
