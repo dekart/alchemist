@@ -27,15 +27,15 @@ gem 'jbuilder', '~> 1.2'
 
 # Useful helpers
 gem "settingslogic"
+gem 'mysql2'
+gem 'pg'
 
 group :development do
   gem 'awesome_print'
   gem 'heroku'
-  gem 'mysql2'
 end
 
 group :production do
-  gem 'pg'
 end
 
 group :doc do

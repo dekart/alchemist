@@ -4,3 +4,10 @@ development: &development
   host: localhost
   username: root
   password:
+
+test: &development
+  adapter: mysql2
+  database: ld28_test
+  host: localhost
+  username: root
+  password:
