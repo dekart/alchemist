@@ -4,9 +4,9 @@ window.LevelAnimator = class extends Animator
   ingredientSize: 55
   ingredientGridOffset: 50
 
-  swapAnimationSpeed: 500
-  explosionAnimationSpeed: 500
-  affectedAnimationSpeed: 500
+  swapAnimationSpeed: 250
+  explosionAnimationSpeed: 200
+  affectedAnimationSpeed: 300
 
   loops: # [StartFrame, EndFrame, Speed]
    ingredient_blue:   {frames: [0,  1], speed: 0.3}
