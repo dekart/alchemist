@@ -139,6 +139,8 @@ window.LevelAnimator = class extends Animator
 
     if @controller.timer.currentValue() <= 10
       @timer.setStyle(@.timerStyle.expiring)
+    else
+      @timer.setStyle(@.timerStyle.normal)
 
     @score.setText(@controller.score)
 
