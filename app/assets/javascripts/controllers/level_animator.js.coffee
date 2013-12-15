@@ -84,14 +84,14 @@ window.LevelAnimator = class extends Animator
 
     @timer = new PIXI.Text(@controller.timer.currentValue(), @.timerStyle.normal)
     @timer.position.x = 760
-    @timer.position.y = 20
+    @timer.position.y = if /Firefox/.test(navigator.userAgent) then 28 else 20
     @timer.anchor.x = 1
 
     @interface_layer.addChild(@timer)
 
     @score = new PIXI.Text(@controller.score, @.scoreStyle)
     @score.position.x = 760
-    @score.position.y = 135
+    @score.position.y = if /Firefox/.test(navigator.userAgent) then 143 else 135
     @score.anchor.x = 1
     @score.anchor.y = 1
 

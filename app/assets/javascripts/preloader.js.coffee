@@ -2,7 +2,7 @@
 
 window.Preloader = class
   @paths:
-    logo: '$assetPath(logo.jpg)'
+    # logo: '$assetPath(logo.jpg)'
     art: '$assetPath(art.png)'
     background: '$assetPath(background.jpg)'
     dialog: '$assetPath(dialog.png)'

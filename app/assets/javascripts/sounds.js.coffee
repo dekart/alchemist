@@ -8,7 +8,7 @@ class SoundManager
   constructor: ->
     @manager = window.soundManager
 
-    @manager.url = '/assets/flash'
+    @manager.url = '/assets'
     @manager.useHTML5Audio = true
     @manager.preferFlash = false
     @manager.flashVersion = 9
