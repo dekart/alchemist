@@ -43,7 +43,7 @@ window.LevelController = class extends BaseController
   onClick: (e)=>
     e.preventDefault()
 
-    return if @animator.isAnimationInProgress()
+    return if @animator.isBlockingAnimationInProgress()
 
     position = @animator.mousePositionToIngredientPosition(@mouse_position)
     clicked_ingredient = @ingredients.get(position.x, position.y)
@@ -92,6 +92,10 @@ window.LevelController = class extends BaseController
   checkAffected: ->
     for ingredient in @exploding
       ingredient.exploding = false
+
+    collected = @potion.checkCollectedIngredients(@exploding)
+
+    @animator.animateCollected(collected)
 
     affected = @ingredients.checkAffectedIngredients(@exploding)
 

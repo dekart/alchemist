@@ -7,6 +7,7 @@ window.LevelAnimator = class extends Animator
   swapAnimationSpeed: 250
   explosionAnimationSpeed: 200
   affectedAnimationSpeed: 300
+  collectedAnimationSpeed: 500
 
   timerStyle:
     normal:
@@ -40,6 +41,7 @@ window.LevelAnimator = class extends Animator
 
     @ingredients = []
     @potion_components = []
+    @collecting = []
 
   prepareTextures: ->
     return unless @.loops?
@@ -88,17 +90,7 @@ window.LevelAnimator = class extends Animator
 
     @interface_layer.addChild(@timer)
 
-    for [ingredient, found], index in @controller.potion.ingredients
-      sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient }"].textures)
-      sprite.anchor.x = 1
-      sprite.position.x = 608 + index * @.ingredientSize
-      sprite.position.y = 140
-      sprite.alpha = 0.6
-
-      @potion_components.push(sprite)
-
-      @interface_layer.addChild(sprite)
-
+    @.createPotionSprites()
 
     @sprites_added = true
 
@@ -121,6 +113,9 @@ window.LevelAnimator = class extends Animator
 
         @controller.onAffectedAnimationFinished()
 
+      if @collected_animation_started and @.isCollectedAnimationFinished()
+        @affected_animation_started = null
+
       @.updateSpriteStates()
 
     super
@@ -130,6 +125,8 @@ window.LevelAnimator = class extends Animator
 
     for sprite in @ingredient_layer.children
       @.updateIngredientSprite(sprite)
+
+    @.updateCollectedAnimationSprites()
 
     if @.isMouseWithinIngredients(@controller.mouse_position)
       position = @.mousePositionToIngredientPosition(@controller.mouse_position)
@@ -150,6 +147,30 @@ window.LevelAnimator = class extends Animator
     sprite.anchor.y = 0.5
     sprite.source = ingredient
     sprite
+
+  createPotionSprites: ->
+    for [type, found], index in @controller.potion.ingredients
+      sprite = new PIXI.MovieClip(@.loops["ingredient_#{ type }"].textures)
+      sprite.anchor.x = 1
+      sprite.position.x = 608 + index * @.ingredientSize
+      sprite.position.y = 140
+
+      if found
+        sprite.gotoAndStop(1)
+      else
+        sprite.alpha = 0.6
+
+      sprite.source_type = type
+
+      @potion_components.push(sprite)
+
+      @interface_layer.addChild(sprite)
+
+  destroyPotionSprites: ->
+    for sprite in @potion_components
+      @interface_layer.removeChild(sprite)
+
+    @potion_components = []
 
   isMouseWithinIngredients: (position)->
     @.gridToScene(-1) < position.x < @.gridToScene(settings.mapSize) and
@@ -214,6 +235,23 @@ window.LevelAnimator = class extends Animator
       if sprite.source.selected then 1 else 0
     )
 
+  updateCollectedAnimationSprites: ->
+    if not @collected_animation_started or @.isCollectedAnimationFinished()
+      for sprite in @collecting
+        @interface_layer.removeChild(sprite)
+
+      @collecting = []
+
+      @.destroyPotionSprites()
+      @.createPotionSprites()
+    else
+      progress = (Date.now() - @collected_animation_started) / @.collectedAnimationSpeed
+
+      for sprite in @collecting
+        sprite.position.x = 700 - (700 - @.gridToScene(sprite.source.x)) * (1 - progress)
+        sprite.position.y = 160 - (160 - @.gridToScene(sprite.source.y)) * (1 - progress)
+
+
   gridToScene: (coordinate)->
     @.ingredientGridOffset + coordinate * @.ingredientSize
 
@@ -242,5 +280,24 @@ window.LevelAnimator = class extends Animator
   isAffectedAnimationFinished: ->
     Date.now() - @affected_animation_started > @.affectedAnimationSpeed
 
-  isAnimationInProgress: ->
+
+  animateCollected: (collected)->
+    @collected_animation_started = Date.now()
+
+    for ingredient in collected
+      sprite = @ingredients[ingredient.x][ingredient.y]
+
+      clone = @.createIngredientSprite(ingredient)
+      clone.scale.x = 0.8
+      clone.scale.y = 0.8
+
+      @collecting.push(clone)
+
+      @interface_layer.addChild(clone)
+
+  isCollectedAnimationFinished: ->
+    Date.now() - @collected_animation_started > @.collectedAnimationSpeed
+
+
+  isBlockingAnimationInProgress: ->
     @swap_animation_started or @explosion_animation_started or @affected_animation_started
