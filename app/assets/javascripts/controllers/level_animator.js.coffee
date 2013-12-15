@@ -89,16 +89,17 @@ window.LevelAnimator = class extends Animator
     @interface_layer.addChild(@highlight)
 
     @timer = new PIXI.Text(@controller.timer.currentValue(), @.timerStyle.normal)
-    @timer.position.x = 750
+    @timer.position.x = 760
     @timer.position.y = 20
     @timer.anchor.x = 1
 
     @interface_layer.addChild(@timer)
 
     @score = new PIXI.Text(@controller.score, @.scoreStyle)
-    @score.position.x = 750
-    @score.position.y = 90
+    @score.position.x = 760
+    @score.position.y = 135
     @score.anchor.x = 1
+    @score.anchor.y = 1
 
     @interface_layer.addChild(@score)
 

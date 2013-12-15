@@ -30,8 +30,17 @@ window.LevelController = class extends BaseController
     $(document).on('keydown', @.onKeyDown)
     $(document).on('keyup', @.onKeyUp)
 
-    @el.on('click', 'canvas', @.onClick)
-    @el.on('mousemove', 'canvas', @.onMouseMove)
+    @el.on('mousedown touchstart', 'canvas', @.onMouseDown)
+    @el.on('mousemove touchmove', 'canvas', @.onMouseMove)
+    @el.on('mouseup touchend', 'canvas', @.onMouseUp)
+
+  updateEventOffsets: (e)->
+    return if e.offsetX and e.offsetY
+
+    offset = $(e.currentTarget).offset()
+
+    e.offsetX = e.clientX - offset.left
+    e.offsetY = e.clientY - offset.top
 
   render: ->
     @animator.deactivate()
@@ -44,34 +53,60 @@ window.LevelController = class extends BaseController
     if @timer.currentValue() == 0
       @.finish()
 
-  onClick: (e)=>
+  onMouseDown: (e)=>
     e.preventDefault()
 
     return if @animator.isBlockingAnimationInProgress()
 
-    position = @animator.mousePositionToIngredientPosition(@mouse_position)
-    clicked_ingredient = @ingredients.get(position.x, position.y)
-
-    if @selected_ingredient
-      @selected_ingredient.toggleSelection()
-
-      if @ingredients.isMatch(@selected_ingredient, clicked_ingredient)
-        @.swapIngredients(@selected_ingredient, clicked_ingredient)
-
-        @selected_ingredient = null
-      else
-        clicked_ingredient.toggleSelection()
-
-        @selected_ingredient = clicked_ingredient
+    if e.type == 'mousedown'
+      @.updateEventOffsets(e)
     else
-      @selected_ingredient = clicked_ingredient
+      @.onMouseMove(e)
 
-      clicked_ingredient.toggleSelection()
+    position = @animator.mousePositionToIngredientPosition(@mouse_position)
 
+    @selected_ingredient = @ingredients.get(position.x, position.y)
+    @selected_ingredient.toggleSelection()
 
   onMouseMove: (e)=>
-    @mouse_position.x = e.offsetX
-    @mouse_position.y = e.offsetY
+    e.preventDefault()
+
+    if e.type == 'mousemove'
+      @.updateEventOffsets(e)
+
+      @mouse_position.x = e.offsetX
+      @mouse_position.y = e.offsetY
+    else
+      @mouse_position.x = e.originalEvent.layerX
+      @mouse_position.y = e.originalEvent.layerY
+
+  onMouseUp: (e)=>
+    @.updateEventOffsets(e)
+
+    e.preventDefault()
+
+    return unless @selected_ingredient
+
+    position = @animator.mousePositionToIngredientPosition(@mouse_position)
+
+    if position.x < @selected_ingredient.x
+      clicked_ingredient = @ingredients.get(@selected_ingredient.x - 1, @selected_ingredient.y)
+    else if position.x > @selected_ingredient.x
+      clicked_ingredient = @ingredients.get(@selected_ingredient.x + 1, @selected_ingredient.y)
+    else if position.y < @selected_ingredient.y
+      clicked_ingredient = @ingredients.get(@selected_ingredient.x, @selected_ingredient.y - 1)
+    else if position.y > @selected_ingredient.y
+      clicked_ingredient = @ingredients.get(@selected_ingredient.x, @selected_ingredient.y + 1)
+
+    return unless clicked_ingredient
+
+    if @ingredients.isMatch(@selected_ingredient, clicked_ingredient)
+      @.swapIngredients(@selected_ingredient, clicked_ingredient)
+
+    @selected_ingredient.toggleSelection()
+
+    @selected_ingredient = null
+
 
   finish: ->
     @animator.deactivate()
