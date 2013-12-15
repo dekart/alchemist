@@ -103,6 +103,11 @@ window.LevelController = class extends BaseController
 
     @exploding = null
 
+  updatePotion: ->
+    return unless @potion.isComplete()
+
+    @potion = new Potion(4)
+
   onSwapAnimationFinished: ->
     @.checkMatches()
 
@@ -111,3 +116,6 @@ window.LevelController = class extends BaseController
 
   onAffectedAnimationFinished: ->
     @.checkMatches()
+
+  onCollectedAnimationFinished: ->
+    @.updatePotion()

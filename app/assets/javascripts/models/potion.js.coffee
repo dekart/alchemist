@@ -29,3 +29,9 @@ window.Potion = class
       return record if record[0] == type and not record[1]
 
     null
+
+  isComplete: ->
+    for [type, collected] in @ingredients
+      return false unless collected
+
+    true
