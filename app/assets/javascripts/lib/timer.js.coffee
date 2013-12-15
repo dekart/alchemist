@@ -8,4 +8,7 @@ window.Timer = class
     if value < 0 then 0 else value
 
   increment: (value)->
-    @finish_at += value * 1000
+    if value + @.currentValue() > settings.timeLimit
+      @finish_at = Date.now() + settings.timeLimit * 1000
+    else
+      @finish_at += value * 1000
