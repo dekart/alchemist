@@ -21,19 +21,16 @@ class SoundManager
         swap: @manager.createSound(
           id: 'swap',
           url: '$assetPath(swap.mp3)'
-          volume: 50
         ).load()
 
         explode: @manager.createSound(
           id: 'explode',
           url: '$assetPath(explode.mp3)'
-          volume: 50
         ).load()
 
         potion: @manager.createSound(
           id: 'potion',
           url: '$assetPath(potion.mp3)'
-          volume: 70
         ).load()
       }
 
