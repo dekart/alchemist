@@ -118,6 +118,8 @@ window.LevelController = class extends BaseController
   updatePotion: ->
     return unless @potion.isComplete()
 
+    sounds.playSound('potion')
+
     @potion = new Potion(4)
 
     @timer.increment(settings.timeBonus)
@@ -130,9 +132,7 @@ window.LevelController = class extends BaseController
 
   onExplosionAnimationFinished: ->
     @.checkAffected()
+    @.updatePotion()
 
   onAffectedAnimationFinished: ->
     @.checkMatches()
-
-  onCollectedAnimationFinished: ->
-    @.updatePotion()

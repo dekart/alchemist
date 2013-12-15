@@ -22,13 +22,19 @@ class SoundManager
           id: 'swap',
           url: '$assetPath(swap.mp3)'
           volume: 50
-        )
+        ).load()
 
         explode: @manager.createSound(
           id: 'explode',
           url: '$assetPath(explode.mp3)'
           volume: 50
-        )
+        ).load()
+
+        potion: @manager.createSound(
+          id: 'potion',
+          url: '$assetPath(potion.mp3)'
+          volume: 70
+        ).load()
       }
 
       @ready = true
@@ -62,10 +68,10 @@ class SoundManager
     $.post('/games/update_volume', sound: @sound_volume, music: @music_volume)
 
   playSound: (key)->
-    @sounds[key].play() if @ready
+    @sounds[key]?.play()
 
   loopSound: (key)->
-    @sounds[key].play(loops: 9999, multiShot: false) if @ready
+    @sounds[key]?.play(loops: 9999, multiShot: false)
 
   startMusic: ->
     @.loopSound('music')

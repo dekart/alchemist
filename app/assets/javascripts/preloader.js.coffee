@@ -5,6 +5,8 @@ window.Preloader = class
     logo: '$assetPath(logo.jpg)'
     art: '$assetPath(art.png)'
     background: '$assetPath(background.jpg)'
+    dialog: '$assetPath(dialog.png)'
+    button: '$assetPath(button.png)'
 
   manifest:
     for key, path of @.paths

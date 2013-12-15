@@ -128,8 +128,6 @@ window.LevelAnimator = class extends Animator
       if @collected_animation_started and @.isCollectedAnimationFinished()
         @collected_animation_started = null
 
-        @controller.onCollectedAnimationFinished()
-
       @.updateSpriteStates()
 
     super
