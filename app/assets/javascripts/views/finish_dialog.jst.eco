@@ -10,5 +10,23 @@
 
   <div class="score"><%= @level.score %></div>
 
-  <button class="replay">Replay</button>
+  <% if @stored: %>
+    <table class="scores">
+      <% for score in @scores: %>
+        <tr class="<%= 'current' if score.current %>">
+          <td class="name"><%= score.name %></td>
+          <td class="value"><%= score.value %></td>
+        </tr>
+      <% end %>
+    </table>
+
+    <button class="replay">Replay</button>
+  <% else: %>
+    <div class="name_prompt">
+      Enter your name to save score:<br />
+      <input type="text" name="name" id="name" autofocus="autofocus"/>
+    </div>
+
+    <button class="save">Save Score</button>
+  <% end %>
 </div>

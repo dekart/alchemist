@@ -46,8 +46,20 @@
     margin: 20px auto;
   }
 
-  .replay {
-    font-size: 30px;
+  .scores {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    padding: 10px;
+    width: 250px;
+    margin: 20px auto;
+
+    .current {
+      color: #ff914d;
+      font-weight: bold;
+    }
+  }
+
+  button {
     width: 150px;
     height: 60px;
     line-height: 55px;
@@ -55,5 +67,21 @@
     border: none;
     background: image-url("button.png") transparent no-repeat;
     text-shadow: 1px 1px 2px black;
+  }
+
+  .replay {
+    font-size: 30px;
+  }
+
+  input[type=text]{
+    font-size: 22px;
+    line-height: 22px;
+    margin-bottom: 10px;
+    text-align: center;
+    padding: 3px;
+  }
+
+  .save {
+    font-size: 22px;
   }
 }

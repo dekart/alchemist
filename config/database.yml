@@ -1,0 +1,6 @@
+development: &development
+  adapter: mysql2
+  database: ld28_development
+  host: localhost
+  username: root
+  password:

@@ -31,6 +31,11 @@ gem "settingslogic"
 group :development do
   gem 'awesome_print'
   gem 'heroku'
+  gem 'mysql2'
+end
+
+group :production do
+  gem 'postgres'
 end
 
 group :doc do
