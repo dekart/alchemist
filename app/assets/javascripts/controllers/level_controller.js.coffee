@@ -39,10 +39,8 @@ window.LevelController = class extends BaseController
   updateEventOffsets: (e)->
     return if e.offsetX and e.offsetY
 
-    offset = $(e.currentTarget).offset()
-
-    e.offsetX = e.clientX - offset.left
-    e.offsetY = e.clientY - offset.top
+    e.offsetX = e.originalEvent.layerX
+    e.offsetY = e.originalEvent.layerY
 
   render: ->
     @animator.deactivate()
